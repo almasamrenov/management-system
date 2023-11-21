@@ -1,13 +1,31 @@
 package Model;
 
 public class Book  extends Literature {
-    private String author;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    private final String author;
     private boolean available;
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", author='" + author + '\'' +
+                ", available=" + available +
+                ", genre='" + genre + '\'' +
+                ", readerId=" + readerId +
+                '}';
+    }
+
     private String genre;
     private int readerId;
 
-    public Book(String title, int year, int publisherId,  String author, boolean available, String genre) {
-        super(title,year,publisherId);
+    public Book(String title, int year,  String author, boolean available, String genre) {
+        super(title,year);
         this.author = author;
         this.available = available;
         this.genre = genre;
@@ -23,9 +41,6 @@ public class Book  extends Literature {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 
     public boolean isAvailable() {
         return available;

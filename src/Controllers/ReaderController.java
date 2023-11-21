@@ -2,41 +2,53 @@ package Controllers;
 
 import DAO.BookDAO;
 import DAO.ReaderDAO;
-import Model.Book;
 import Model.Reader;
+import NotificationSystem.Observer.LibraryNotificationSystem;
+import NotificationSystem.Decorator.TimeStampDecorator;
+import NotificationSystem.Observer.UserObserver;
 
 import java.util.Scanner;
 
 public class ReaderController {
     Scanner sc=new Scanner(System.in);
-    private static ReaderDAO readerDAO;
-    private static BookDAO bookDAO;
+    private ReaderDAO readerDAO;
+    private BookDAO bookDAO;
     private Reader reader;
 
-    public void assignLiterature(int readerId, Book book) {
-        book.setAvailable(false);
-        book.setReaderId(readerId);
-        bookDAO.assign(book);
 
-    }
 
-    public static Reader signUp(String name,String email,String password){
-        Reader newReader=new Reader(name,email,password);
-        readerDAO.signUp(newReader);
-        return newReader;
-    }
+    public void signUp(){
+        LibraryNotificationSystem libraryNotificationSystem=new LibraryNotificationSystem();
+        System.out.println("Enter your name: ");
+        String name = sc.next();
 
-    public static Reader signIn(String email,String password){
-        Reader existingReader = new Reader(email, password);
-        if (checkIsSigned(existingReader)) {
-            System.out.println("Successfully signed in! " + "Welcome, " + existingReader.getName());
+        System.out.println("Enter your email: ");
+        String email = sc.next();
+
+        System.out.println("Enter new password: ");
+        String password = sc.next();
+
+        reader = new Reader(name, email, password);
+
+        System.out.println("Do you wanna get notification about new releases(Y/N)?");
+        String yOrN=sc.next();
+        if(yOrN.equals("Y")){
+            System.out.println("Would you get messages with real date time?");
+            yOrN= sc.next();
+            if(yOrN.equals("Y")) {
+                UserObserver timestampedObserver = new TimeStampDecorator(reader);
+                libraryNotificationSystem.addObserver(timestampedObserver);
+            }
+            else{
+                libraryNotificationSystem.addObserver(reader);
+            }
         }
-        else {
-            System.out.println("Invalid email or password!");
-        }
-        return existingReader;
+        readerDAO.signUp(reader);
     }
-    public static boolean checkIsSigned(Reader reader){
-        return readerDAO.check() == 1;
+
+    public void removeUser() {
+///////////////////////
     }
+
+
 }

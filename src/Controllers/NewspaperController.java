@@ -1,23 +1,25 @@
 package Controllers;
 
 import DAO.NewspaperDAO;
-import Model.Book;
 import Model.Newspaper;
-import Model.Publisher;
-import Model.Reader;
+
 public class NewspaperController implements LiteratureController{
     private Newspaper newspaper;
     private NewspaperDAO newspaperDAO;
 
-    @Override
-    public void addLiterature(Publisher publisher) {
 
-        /////////////////
+    public void returnAllListOfLiter(){
+        newspaperDAO.returnAllList();
+    }
+
+    @Override
+    public void createLiterature() {
+        ////
         newspaperDAO.addNewspaper(newspaper);
     }
 
     @Override
-    public void deleteLiterature(int id) {
+    public void deleteLiterature() {
         newspaperDAO.deleteNewspaper(newspaper);
     }
 

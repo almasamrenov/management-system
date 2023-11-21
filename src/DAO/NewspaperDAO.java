@@ -1,6 +1,6 @@
 package DAO;
 
-import Model.Book;
+import Database.DatabaseConnection;
 import Model.Newspaper;
 
 import java.sql.Connection;
@@ -8,10 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class NewspaperDAO {
-    private  final Connection conn;
+    DatabaseConnection db=DatabaseConnection.getInstance();
+    Connection conn= db.getConnection();
 
 
-    public NewspaperDAO(Connection conn) {
+
+    public NewspaperDAO(Connection conn) throws SQLException {
         this.conn = conn;
     }
 
@@ -37,5 +39,8 @@ public class NewspaperDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void returnAllList() {
     }
 }

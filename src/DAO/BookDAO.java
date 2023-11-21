@@ -1,16 +1,21 @@
 package DAO;
 
+import Database.DatabaseConnection;
 import Model.Book;
-import Model.Reader;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class BookDAO {
-    private final Connection conn;
+public class BookDAO implements DataSource{
+    DatabaseConnection db=DatabaseConnection.getInstance();
+    Connection conn= db.getConnection();
 
-    public BookDAO(Connection conn){
+
+    public BookDAO(Connection conn) throws SQLException {
         this.conn=conn;
     }
 
@@ -37,5 +42,25 @@ public class BookDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+
+    @Override
+    public List<Book> getData() {
+        try {
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM Books");
+            ResultSet resultSet = statement.executeQuery();
+            List<Book> books = new ArrayList<>();
+            while (resultSet.next()) {
+
+            }
+            return books;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void releaseBook(Book book) {
     }
 }

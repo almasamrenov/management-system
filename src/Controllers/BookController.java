@@ -1,21 +1,22 @@
 package Controllers;
 
 import DAO.BookDAO;
-import Model.*;
+import Model.Book;
+import NotificationSystem.Observer.LibraryNotificationSystem;
+import NotificationSystem.Strategy.NotificationType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class BookController implements LiteratureController,Observed {
+public class BookController implements LiteratureController {
     Scanner sc=new Scanner(System.in);
     private  BookDAO bookDAO;
     private  Book book;
-
+    private LibraryNotificationSystem libraryNotificationSystem;
 
     //factory
     @Override
-    public void addLiterature(Publisher publisher) {
+    public void createLiterature() {
         System.out.print("Enter the title of the book:");
         String title=sc.next();
         System.out.println();
@@ -31,34 +32,39 @@ public class BookController implements LiteratureController,Observed {
         System.out.print("Enter the genre of the book: ");
         String genre=sc.next();
 
-        System.out.println("Note: you will be add as publisher of this book!");
+        book = new Book(title, year,  author, true, genre);
 
-        book = new Book(title, year, publisher.getId(), author, true, genre);
-
-        //notify observers////////////////////////////
         bookDAO.addBook(book);
+        libraryNotificationSystem.notifyObservers("Hi, we have message for you! \nAdded new book: "+book.toString(), NotificationType.NEW_BOOK);
     }
 
     @Override
-    public void deleteLiterature(int id) {
-        //notify observers////////////////////////////
+    public void deleteLiterature() {
+        System.out.println("Input id");
+        int id= sc.nextInt();
+        /////////////////////////
         bookDAO.deleteBook(id);
     }
 
 
-
-    @Override
-    public void addObserver(Observer observer) {
-
+    public void releaseBook(){
+        //////////////////////////////
+        System.out.println("Input id:");
+        bookDAO.releaseBook(book);
+        libraryNotificationSystem.notifyObservers("Just released "+book.toString(),NotificationType.RELEASED_BOOK);
     }
 
-    @Override
-    public void removerObserver(Observer observer) {
-
+   public int returnAllBook(){
+        ////////////////////////
+      List<Book> list=bookDAO.getData();
+       System.out.println("Input the id of literature that you want:");
+      return  sc.nextInt();
+   }
+    public void assignLiterature() {
+        /////////////////////
+        book.setAvailable(false);
+//        book.setReaderId();
+        bookDAO.assign(book);
     }
 
-    @Override
-    public void notifyObservers() {
-
-    }
 }
